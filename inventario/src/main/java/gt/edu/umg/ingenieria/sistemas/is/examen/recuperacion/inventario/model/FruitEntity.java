@@ -24,6 +24,9 @@ public class FruitEntity {
     @Column(name = "stock")
     private Long stock;
 
+    public FruitEntity() {        
+    }    
+
     public FruitEntity(String name, Float unitPrice, Long stock) {
         this.name = name;
         this.unitPrice = unitPrice;
