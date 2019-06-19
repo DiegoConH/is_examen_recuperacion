@@ -1,8 +1,11 @@
 package gt.edu.umg.ingenieria.sistemas.is.examen.recuperacion.inventario.controller;
 
 import gt.edu.umg.ingenieria.sistemas.is.examen.recuperacion.inventario.model.FruitEntity;
+import gt.edu.umg.ingenieria.sistemas.is.examen.recuperacion.inventario.model.FruitListWrapper;
 import gt.edu.umg.ingenieria.sistemas.is.examen.recuperacion.inventario.service.FruitService;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,5 +49,25 @@ public class FruitController {
     @GetMapping("/getAllFruitOrderedByNameAsc")
     public String getAllFruitOrderedByNameAsc() {
         return this.fruitService.getAllFruitsOrderedByNameAsc();
+    }
+    
+    @DeleteMapping("/reset")
+    public void reset() {
+        this.fruitService.reset();
+    }
+    
+    @DeleteMapping("/remove")
+    public void remove(@RequestParam(required = true) String name) {
+        this.fruitService.remove(name);
+    }
+    
+    @GetMapping("/getAllFruitNames")
+    public String getAllFruitNames() {
+        return this.fruitService.getAllFruitNames();
+    }
+    
+    @GetMapping("/getAllFruits")
+    public FruitListWrapper getAllFruits() {
+        return this.fruitService.getAllFruits();
     }
 }

@@ -2,6 +2,7 @@ package gt.edu.umg.ingenieria.sistemas.is.examen.recuperacion.inventario.service
 
 import gt.edu.umg.ingenieria.sistemas.is.examen.recuperacion.inventario.dao.FruitRepository;
 import gt.edu.umg.ingenieria.sistemas.is.examen.recuperacion.inventario.model.FruitEntity;
+import gt.edu.umg.ingenieria.sistemas.is.examen.recuperacion.inventario.model.FruitListWrapper;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,4 +55,30 @@ public class FruitService {
         
         return Arrays.toString(fruitNames);
     }
+    
+    public void reset() {
+        this.fruitRepo.deleteAll();
+    }
+    
+    public void remove(String name) {
+        FruitEntity fruit = this.fruitRepo.findByName(name);
+        this.fruitRepo.deleteById(fruit.getId());
+    }
+    
+    public String getAllFruitNames() {        
+        List<FruitEntity> allFruits = (List<FruitEntity>) this.fruitRepo.findAll();
+        String[] fruitNames = new String[allFruits.size()];
+        int f = 0;
+        
+        for (FruitEntity fruit : allFruits) {
+            fruitNames[f++] = fruit.getName();
+        }        
+        
+        return Arrays.toString(fruitNames);
+    }
+    
+    public FruitListWrapper getAllFruits() {
+        return new FruitListWrapper((List<FruitEntity>) this.fruitRepo.findAll());
+    }
+    
 }
