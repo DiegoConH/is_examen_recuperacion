@@ -99,4 +99,81 @@ public class InventarioApplicationTests {
         Assert.assertEquals("Test #4 failed!!!", expectedResult, actualResult);
     }
 
+    @Test
+    public void whenDeleteAllFruit_thenlistallFruits(){
+        System.out.println("Test #5 - When delete all fruits, then list all fruits must not contain any fruit.");
+
+        // given
+        FruitEntity banano = new FruitEntity("Banano", 2.50f, 100l);
+        FruitEntity papaya = new FruitEntity("Papaya", 15.00f, 15l);
+        FruitEntity melon = new FruitEntity("Melon", 14.00f, 10l);
+        FruitEntity sandia = new FruitEntity("Sandia", 35.50f, 17l);
+        String expectedResult = "[]";
+        // when
+        this.testRestTemplate.delete("/inventory/fruit/reset");
+        FruitEntity insertBanano = this.testRestTemplate.postForObject("/inventory/fruit/register", banano, FruitEntity.class);
+        FruitEntity insertPapaya = this.testRestTemplate.postForObject("/inventory/fruit/register", papaya, FruitEntity.class);
+        FruitEntity insertMelon = this.testRestTemplate.postForObject("/inventory/fruit/register", melon, FruitEntity.class);
+        FruitEntity insertSandia = this.testRestTemplate.postForObject("/inventory/fruit/register", sandia, FruitEntity.class);
+        this.testRestTemplate.delete("/inventory/fruit/remove?name=Banano");
+        this.testRestTemplate.delete("/inventory/fruit/remove?name=Melon");
+        this.testRestTemplate.delete("/inventory/fruit/remove?name=Papaya");
+        this.testRestTemplate.delete("/inventory/fruit/remove?name=Sandia");
+        String actualResult = this.testRestTemplate.getForObject("/inventory/fruit/getAllFruitNames", String.class);
+
+        // then
+        Assert.assertEquals("Test #5 failed!!!", expectedResult, actualResult);
+    }
+
+    @Test
+    public void whenGetDiscountedPrice_thenPriceIsUpdatedWithDiscounted() {
+        System.out.println("Test #6 - When asking for a discount in price, then the price is updated with a discount.");
+
+        // given
+        FruitEntity melon = new FruitEntity("Melon", 20.00f, 150l);
+        Double expectedResult = 10.00d;
+        // when
+        this.testRestTemplate.delete("/inventory/fruit/reset");
+        FruitEntity insertMelon = this.testRestTemplate.postForObject("/inventory/fruit/register", melon, FruitEntity.class);
+        Double actualResult = this.testRestTemplate.getForObject("/inventory/fruit/getReducedPrice/Melon?discount=10", Double.class);
+        // then
+        Assert.assertEquals("Test #6 failed!!!", expectedResult, actualResult);
+    }
+
+    /**@Test
+    /public void whenGetDiscountedPrice_thenPriceIsUpdatedWithDiscounted() {
+        System.out.println("Test #7 - When asking for a discount in price, then the price is updated with a discount.");
+
+        // given
+        FruitEntity melon = new FruitEntity("Melon", 20.00f, 150l);
+        Double expectedResult = 10.00d;
+        // when
+        this.testRestTemplate.delete("/inventory/fruit/reset");
+        FruitEntity insertMelon = this.testRestTemplate.postForObject("/inventory/fruit/register", melon, FruitEntity.class);
+        Double actualResult = this.testRestTemplate.getForObject("/inventory/fruit/getReducedPrice/Melon?discount=10", Double.class);
+        // then
+        Assert.assertEquals("Test #7 failed!!!", expectedResult, actualResult);
+    }*/
+
+
+    @Test
+    public void whenFruitsInserted_GetSubtotal() {
+        System.out.println("Test #7 - When Fruits inserted, get subtotal.");
+        // given
+        FruitEntity banano = new FruitEntity("Banano", 15.00f, 10l);
+        Double expectedResult = 84.00d;
+        // when
+        this.testRestTemplate.delete("/inventory/fruit/reset");
+        FruitEntity insertMelon = this.testRestTemplate.postForObject("/inventory/fruit/register", banano, FruitEntity.class);
+        Double actualResult = this.testRestTemplate.getForObject("/inventory/fruit/getSubtotal/Banano/6?discount=6", Double.class);
+
+        // then
+        Assert.assertEquals("Test #7 failed!!!", expectedResult, actualResult);
+    }
+
+
 }
+
+
+
+
