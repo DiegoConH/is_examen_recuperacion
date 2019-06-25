@@ -246,7 +246,7 @@ public class InventarioApplicationTests {
         FruitEntity banano1 = new FruitEntity("Banano", 2.50f, 100l);
         FruitEntity banano2 = new FruitEntity("Banano", 15.00f, 15l);
         FruitEntity banano3=new FruitEntity("Banano", 20.00f,20l);
-        String expectedResult = "[Banano, Banano]";
+        String expectedResult = "[Banano, Banano, Banano]";
 
         // when
         this.testRestTemplate.delete("/inventory/fruit/reset");
