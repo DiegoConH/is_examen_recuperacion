@@ -222,7 +222,7 @@ public class InventarioApplicationTests {
 
     }
 
-    /**@Test(expected = org.springframework.web.client.RestClientException.class)
+    @Test(expected = org.springframework.web.client.RestClientException.class)
     public void whenDiscountedPriceAndDiscountNotPresent_thenThrowsException() {
         System.out.println("Test #12 - When discounted price and discount not present, then throws exception.");
 
@@ -232,31 +232,52 @@ public class InventarioApplicationTests {
         // when
         this.testRestTemplate.delete("/inventory/fruit/reset");
         FruitEntity insertBanano = this.testRestTemplate.postForObject("/inventory/fruit/register", banano, FruitEntity.class);
-        Double actualResult = this.testRestTemplate.getForObject("/inventory/fruit/getReducedPrice/banano", Double.class);
+
+    Double actualResult = this.testRestTemplate.getForObject("/inventory/fruit/getReducedPrice/banano", Double.class);
 
         // then
         Assert.assertEquals("Test #12 failed!!!", expectedResult, actualResult);
-    }*/
+    }
+
+     @Test(expected = org.springframework.web.client.RestClientException.class)
+     public void whenGettingFruitStockWhileDiscountIsString_thenThrowsException() {
+     System.out.println("Test #13 - When getting fruit stock while id is string, then throws exception.");
+
+     // given
+     FruitEntity Banano = new FruitEntity("Banano", 15.00f, 120l);
+     Double expectedResult = 115.00d;
+     // when
+     this.testRestTemplate.delete("/inventory/fruit/reset");
+     FruitEntity insertBanano= this.testRestTemplate.postForObject("/inventory/fruit/register", Banano, FruitEntity.class);
+
+     Double actualResult = this.testRestTemplate.getForObject("/inventory/fruit/getFruitStock/EXCEPTION", Double.class);
+
+     // then
+     Assert.assertEquals("Test #13 failed!!!", expectedResult, actualResult);
+     }
+
 
     @Test
     public void whenSameFruitIsInsertedMultipleTimes_thenFruitListShouldContainDuplicates() {
-        System.out.println("Test #13 - When the same fruit is inserted multiple times, fruit list should contain duplicates.");
+        System.out.println("Test #14 - When the same fruit is inserted multiple times, fruit list should contain duplicates.");
 
         // given
         FruitEntity banano1 = new FruitEntity("Banano", 2.50f, 100l);
         FruitEntity banano2 = new FruitEntity("Banano", 15.00f, 15l);
         FruitEntity banano3=new FruitEntity("Banano", 20.00f,20l);
-        String expectedResult = "[Banano, Banano, Banano]";
-
+        FruitEntity melon1=new FruitEntity("Melon", 22.00f,22l);
+        FruitEntity melon2=new FruitEntity("Melon", 33.00f,33l);
+        String expectedResult = "[Banano, Banano, Banano, Melon, Melon]";
         // when
         this.testRestTemplate.delete("/inventory/fruit/reset");
         FruitEntity insertBanano1= this.testRestTemplate.postForObject("/inventory/fruit/register", banano1, FruitEntity.class);
         FruitEntity insertBanano2=this.testRestTemplate.postForObject("/inventory/fruit/register", banano2, FruitEntity.class);
         FruitEntity insertBanano3=this.testRestTemplate.postForObject("/inventory/fruit/register", banano3,FruitEntity.class);
+        FruitEntity insertMelon1=this.testRestTemplate.postForObject("/inventory/fruit/register", melon1,FruitEntity.class);
+        FruitEntity insertMelon2=this.testRestTemplate.postForObject("/inventory/fruit/register", melon2,FruitEntity.class);
         String actualResult =this.testRestTemplate.getForObject("/inventory/fruit/getAllFruitNames", String.class);
-
         // then
-        Assert.assertEquals("Test #13 failed!!!", expectedResult, actualResult);
+        Assert.assertEquals("Test #14 failed!!!", expectedResult, actualResult);
     }
 
 
